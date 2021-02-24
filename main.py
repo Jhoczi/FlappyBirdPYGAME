@@ -81,3 +81,80 @@ while run:
 
 # Quit the program
 pygame.quit()
+
+# VERSIONS FROM LESSON:
+
+import pygame
+
+# CONST
+
+
+# COLORS
+WHITE = (255,255,255)
+BLACK = (0,0,0)
+GREEN = (93,240,69)
+
+# GENERAL SETTINGS
+SCREEN_WIDTH = 640
+SCREEN_HEIGHT = 420
+global loop
+FPS = 30
+loop = True
+
+# PYGAME SETTINGS
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+pygame.display.set_caption("Flappy Bird")
+clock = pygame.time.Clock()
+
+def CheckEvents(bird):
+    global loop
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            loop = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                loop = False
+            if event.key == pygame.K_SPACE:
+                bird.SetVelocity(-6)
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_SPACE:
+                bird.SetVelocity(6)
+
+class Bird(pygame.sprite.Sprite):
+    def __init__(self,x,y,imgSRC):
+        self.name = "Player 1"
+        self.x = x
+        self.y = y
+        self.width = 70
+        self.height = 50
+        self.image = pygame.transform.scale(pygame.image.load(imgSRC),(self.width,self.height))
+        self.velocity = 0
+    def UpdateBird(self,screen):
+        self.y += self.velocity
+        screen.blit(self.image,(self.x,self.y))
+    def SetVelocity(self,value):
+        self.velocity = value
+
+def Update():
+    bird.UpdateBird(screen)
+    pygame.display.update()
+
+# GRAPHICS
+BACKGROUND_SRC = 'background.png'
+BIRD_SRC = 'bird.png'
+
+# VARIABLES
+background = pygame.image.load(BACKGROUND_SRC)
+background = pygame.transform.scale(background,(SCREEN_WIDTH,SCREEN_HEIGHT))
+
+bird = Bird(0,200,BIRD_SRC)
+#bird2 = Bird(300,0,BIRD_SRC)
+
+while loop:
+    CheckEvents(bird)
+    screen.fill(WHITE)
+    screen.blit(background, (0,0))
+    Update()
+    clock.tick(FPS)
+pygame.quit()
